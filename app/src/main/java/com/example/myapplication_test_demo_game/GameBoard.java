@@ -22,11 +22,14 @@ public class GameBoard extends View{
     private int starFade = 2;
     private Rect sprite1Bounds = new Rect(0,0,0,0);
     private Rect sprite2Bounds = new Rect(0,0,0,0);
+    private Rect sprite3Bounds = new Rect(0,0,0,0);
     private Point sprite1;
     private Point sprite2;
+    private Point sprite3;
     private Bitmap bm1 = null;
     private Matrix m = null;
     private Bitmap bm2 = null;
+    private Bitmap bm3 = null;
     //Collision flag and point
     private boolean collisionDetected = false;
     private Point lastCollision = new Point(-1,-1);
@@ -61,8 +64,21 @@ public class GameBoard extends View{
         return sprite2.x;
     }
 
+
     synchronized public int getSprite2Y() {
         return sprite2.y;
+    }
+    //sprite 3 setter
+    synchronized public void setSprite3(int x, int y) {
+        sprite3=new Point(x,y);
+    }
+
+    //sprite 3 getter
+    synchronized public int getSprite3X() {
+        return sprite3.x;
+    }
+    synchronized public int getSprite3Y() {
+        return sprite3.y;
     }
 
     synchronized public void resetStarField() {
@@ -85,7 +101,13 @@ public class GameBoard extends View{
     synchronized public int getSprite2Height() {
         return sprite2Bounds.height();
     }
+    synchronized public int getSprite3Width() {
+        return sprite2Bounds.width();
+    }
 
+    synchronized public int getSprite3Height() {
+        return sprite2Bounds.height();
+    }
     //return the point of the last collision
     synchronized public Point getLastCollision() {
         return lastCollision;
@@ -102,13 +124,16 @@ public class GameBoard extends View{
         //load our bitmaps and set the bounds for the controller
         sprite1 = new Point(-1,-1);
         sprite2 = new Point(-1,-1);
+        sprite3 = new Point(-1,-1);
         //Define a matrix so we can rotate the asteroid
         m = new Matrix();
         p = new Paint();
         bm1 = BitmapFactory.decodeResource(getResources(), R.drawable.spaceship);
         bm2 = BitmapFactory.decodeResource(getResources(), R.drawable.stone);
+        bm3 = BitmapFactory.decodeResource(getResources(), R.drawable.plane2);
         sprite1Bounds = new Rect(0,0, bm1.getWidth(), bm1.getHeight());
         sprite2Bounds = new Rect(0,0, bm2.getWidth(), bm2.getHeight());
+        sprite3Bounds = new Rect(0,0, bm3.getWidth(), bm3.getHeight());
     }
 
     synchronized private void initializeStars(int maxX, int maxY) {
@@ -173,6 +198,9 @@ public class GameBoard extends View{
         }
         if (sprite2.x>=0) {
             canvas.drawBitmap(bm2, sprite2.x, sprite2.y, null);
+        }
+        if (sprite3.x>=0) {
+            canvas.drawBitmap(bm3, sprite3.x, sprite3.y, null);
         }
         //The last order of business is to check for a collision
         collisionDetected = checkForCollision();
