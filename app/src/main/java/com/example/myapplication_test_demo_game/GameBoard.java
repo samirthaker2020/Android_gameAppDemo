@@ -7,12 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
-
 
 public class GameBoard extends View{
 
@@ -27,30 +27,41 @@ public class GameBoard extends View{
     private Point sprite2;
     //Bitmaps that hold the actual sprite images
     private Bitmap bm1 = null;
+    private Matrix m = null;
     private Bitmap bm2 = null;
+
+    private int sprite1Rotation = 0;
 
     private static final int NUM_OF_STARS = 25;
 
     //Allow our controller to get and set the sprite positions
 
     //sprite 1 setter
-    synchronized public void setSprite1(Point p) {
-        sprite1=p;
+    synchronized public void setSprite1(int x, int y) {
+        sprite1=new Point(x,y);
     }
 
     //sprite 1 getter
-    synchronized public Point getSprite1() {
-        return sprite1;
+    synchronized public int getSprite1X() {
+        return sprite1.x;
+    }
+
+    synchronized public int getSprite1Y() {
+        return sprite1.y;
     }
 
     //sprite 2 setter
-    synchronized public void setSprite2(Point p) {
-        sprite2=p;
+    synchronized public void setSprite2(int x, int y) {
+        sprite2=new Point(x,y);
     }
 
     //sprite 2 getter
-    synchronized public Point getSprite2() {
-        return sprite2;
+    synchronized public int getSprite2X() {
+        return sprite2.x;
+    }
+
+    synchronized public int getSprite2Y() {
+        return sprite2.y;
     }
 
     synchronized public void resetStarField() {
@@ -80,9 +91,11 @@ public class GameBoard extends View{
         //load our bitmaps and set the bounds for the controller
         sprite1 = new Point(-1,-1);
         sprite2 = new Point(-1,-1);
+        //Define a matrix so we can rotate the asteroid
+        m = new Matrix();
         p = new Paint();
-        bm1 = BitmapFactory.decodeResource(getResources(), R.drawable.stone);
-        bm2 = BitmapFactory.decodeResource(getResources(), R.drawable.spaceship);
+        bm1 = BitmapFactory.decodeResource(getResources(), R.drawable.spaceship);
+        bm2 = BitmapFactory.decodeResource(getResources(), R.drawable.stone);
         sprite1Bounds = new Rect(0,0, bm1.getWidth(), bm1.getHeight());
         sprite2Bounds = new Rect(0,0, bm2.getWidth(), bm2.getHeight());
     }
@@ -121,7 +134,12 @@ public class GameBoard extends View{
         //The items drawn at the top of the loop are on the bottom of the z-order.
         //Therefore we draw our set, then our actors, and finally any fx.
         if (sprite1.x>=0) {
-            canvas.drawBitmap(bm1, sprite1.x, sprite1.y, null);
+            m.reset();
+            m.postTranslate((float)(sprite1.x), (float)(sprite1.y));
+            m.postRotate(sprite1Rotation, (float)(sprite1.x+sprite1Bounds.width()/2.0), (float)(sprite1.y+sprite1Bounds.width()/2.0));
+            canvas.drawBitmap(bm1, m, null);
+            sprite1Rotation+=5;
+            if (sprite1Rotation >= 360) sprite1Rotation=0;
         }
         if (sprite2.x>=0) {
             canvas.drawBitmap(bm2, sprite2.x, sprite2.y, null);
