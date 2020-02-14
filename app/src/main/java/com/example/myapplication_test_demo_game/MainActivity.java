@@ -2,6 +2,7 @@ package com.example.myapplication_test_demo_game;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import com.example.myapplication_test_demo_game.GameBoard;
 import com.example.myapplication_test_demo_game.R.*;
@@ -12,6 +13,9 @@ import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity implements OnClickListener {
     private Handler frame = new Handler();
     //Divide the frame by 1000 to calculate how many times per second the screen will update.
@@ -32,14 +36,62 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             }
         }, 1000);
     }
+    private Point getRandomPoint() {
+        Random r = new Random();
+        int minX = 0;
+        int maxX = findViewById(R.id.the_canvas).getWidth() - ((GameBoard)findViewById(R.id.the_canvas)).getSprite1Width();
+        int x = 0;
+        int minY = 0;
+        int maxY = findViewById(R.id.the_canvas).getHeight() - ((GameBoard)findViewById(R.id.the_canvas)).getSprite1Height();
+        int y = 0;
+        x = r.nextInt(maxX-minX+1)+minX;
 
+
+        y = r.nextInt(maxY-minY+1)+minY;
+
+
+        return new Point (x,y);
+    }
     synchronized public void initGfx() {
         ((GameBoard)findViewById(R.id.the_canvas)).resetStarField();
+
+
+//Select two random points for our initial sprite placement.
+
+
+//The loop is just to make sure we don't accidentally pick
+
+
+//two points that overlap.
+
+
+        Point p1, p2;
+
+
+        do {
+            p1 = getRandomPoint();
+
+
+            p2 = getRandomPoint();
+
+
+        } while (Math.abs(p1.x - p2.x) <
+                ((GameBoard)findViewById(R.id.the_canvas)).getSprite1Width());
+
+
+        ((GameBoard)findViewById(R.id.the_canvas)).setSprite1(p1);
+
+
+        ((GameBoard)findViewById(R.id.the_canvas)).setSprite2(p2);
+
+
         ((Button)findViewById(R.id.the_button)).setEnabled(true);
-        //It's a good idea to remove any existing callbacks to keep
-        //them from inadvertently stacking up.
         frame.removeCallbacks(frameUpdate);
+
+
         frame.postDelayed(frameUpdate, FRAME_RATE);
+
+
     }
     @Override
     synchronized public void onClick(View v) {
