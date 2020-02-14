@@ -20,15 +20,16 @@ public class GameBoard extends View{
     private List<Point> starField = null;
     private int starAlpha = 80;
     private int starFade = 2;
-    //Add private variables to keep up with sprite position and size
     private Rect sprite1Bounds = new Rect(0,0,0,0);
     private Rect sprite2Bounds = new Rect(0,0,0,0);
     private Point sprite1;
     private Point sprite2;
-    //Bitmaps that hold the actual sprite images
     private Bitmap bm1 = null;
     private Matrix m = null;
     private Bitmap bm2 = null;
+    //Collision flag and point
+    private boolean collisionDetected = false;
+    private Point lastCollision = new Point(-1,-1);
 
     private int sprite1Rotation = 0;
 
@@ -85,6 +86,16 @@ public class GameBoard extends View{
         return sprite2Bounds.height();
     }
 
+    //return the point of the last collision
+    synchronized public Point getLastCollision() {
+        return lastCollision;
+    }
+
+    //return the collision flag
+    synchronized public boolean wasCollisionDetected() {
+        return collisionDetected;
+    }
+
     public GameBoard(Context context, AttributeSet aSet) {
         super(context, aSet);
         p = new Paint();
@@ -100,7 +111,7 @@ public class GameBoard extends View{
         sprite2Bounds = new Rect(0,0, bm2.getWidth(), bm2.getHeight());
     }
 
-    private void initializeStars(int maxX, int maxY) {
+    synchronized private void initializeStars(int maxX, int maxY) {
         starField = new ArrayList<Point>();
         for (int i=0; i<NUM_OF_STARS; i++) {
             Random r = new Random();
@@ -108,6 +119,28 @@ public class GameBoard extends View{
             int y = r.nextInt(maxY-5+1)+5;
             starField.add(new Point (x,y));
         }
+        collisionDetected = false;
+    }
+
+    private boolean checkForCollision() {
+        if (sprite1.x<0 && sprite2.x<0 && sprite1.y<0 && sprite2.y<0) return false;
+        Rect r1 = new Rect(sprite1.x, sprite1.y, sprite1.x + sprite1Bounds.width(),  sprite1.y + sprite1Bounds.height());
+        Rect r2 = new Rect(sprite2.x, sprite2.y, sprite2.x + sprite2Bounds.width(), sprite2.y + sprite2Bounds.height());
+        Rect r3 = new Rect(r1);
+        if(r1.intersect(r2)) {
+            for (int i = r1.left; i<r1.right; i++) {
+                for (int j = r1.top; j<r1.bottom; j++) {
+                    if (bm1.getPixel(i-r3.left, j-r3.top)!= Color.TRANSPARENT) {
+                        if (bm2.getPixel(i-r2.left, j-r2.top) != Color.TRANSPARENT) {
+                            lastCollision = new Point(sprite2.x + i-r2.left, sprite2.y + j-r2.top);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        lastCollision = new Point(-1,-1);
+        return false;
     }
 
     @Override
@@ -130,9 +163,6 @@ public class GameBoard extends View{
             canvas.drawPoint(starField.get(i).x, starField.get(i).y, p);
         }
 
-        //Now we draw our sprites.  Items drawn in this function are stacked.
-        //The items drawn at the top of the loop are on the bottom of the z-order.
-        //Therefore we draw our set, then our actors, and finally any fx.
         if (sprite1.x>=0) {
             m.reset();
             m.postTranslate((float)(sprite1.x), (float)(sprite1.y));
@@ -144,6 +174,15 @@ public class GameBoard extends View{
         if (sprite2.x>=0) {
             canvas.drawBitmap(bm2, sprite2.x, sprite2.y, null);
         }
-
+        //The last order of business is to check for a collision
+        collisionDetected = checkForCollision();
+        if (collisionDetected ) {
+            //if there is one lets draw a red X
+            p.setColor(Color.RED);
+            p.setAlpha(255);
+            p.setStrokeWidth(5);
+            canvas.drawLine(lastCollision.x - 5, lastCollision.y - 5, lastCollision.x + 5, lastCollision.y + 5, p);
+            canvas.drawLine(lastCollision.x + 5, lastCollision.y - 5, lastCollision.x - 5, lastCollision.y + 5, p);
+        }
     }
 }
