@@ -78,25 +78,25 @@ public class MainActivity extends Activity implements OnClickListener {
         do {
             p1 = getRandomPoint();
             p2 = getRandomPoint();
-            p3=getRandomPoint();
-        } while (Math.abs(p1.x - p2.x - p3.x) < ((GameBoard)findViewById(R.id.the_canvas)).getSprite1Width());
+          //  p3= getRandomPoint();
+        } while (Math.abs(p1.x - p2.x ) < ((GameBoard)findViewById(R.id.the_canvas)).getSprite1Width());
         ((GameBoard)findViewById(R.id.the_canvas)).setSprite1(p1.x, p1.y);
         ((GameBoard)findViewById(R.id.the_canvas)).setSprite2(p2.x, p2.y);
-        ((GameBoard)findViewById(R.id.the_canvas)).setSprite2(p3.x, p3.y);
+       // ((GameBoard)findViewById(R.id.the_canvas)).setSprite2(p3.x, p3.y);
         //Give the asteroid a random velocity
         sprite1Velocity = getRandomVelocity();
 
         //Fix the ship velocity at a constant speed for now
         sprite2Velocity = new Point(1,1);
-        sprite3Velocity =getRandomVelocity();
+//        sprite3Velocity =new Point(1,1);
         //Set our boundaries for the sprites
         sprite1MaxX = findViewById(R.id.the_canvas).getWidth() - ((GameBoard)findViewById(R.id.the_canvas)).getSprite1Width();
         sprite1MaxY = findViewById(R.id.the_canvas).getHeight() - ((GameBoard)findViewById(R.id.the_canvas)).getSprite1Height();
         sprite2MaxX = findViewById(R.id.the_canvas).getWidth() - ((GameBoard)findViewById(R.id.the_canvas)).getSprite2Width();
         sprite2MaxY = findViewById(R.id.the_canvas).getHeight() - ((GameBoard)findViewById(R.id.the_canvas)).getSprite2Height();
 
-        sprite3MaxX = findViewById(R.id.the_canvas).getWidth() - ((GameBoard)findViewById(R.id.the_canvas)).getSprite3Width();
-        sprite3MaxY = findViewById(R.id.the_canvas).getHeight() - ((GameBoard)findViewById(R.id.the_canvas)).getSprite3Height();
+        sprite3MaxX = findViewById(R.id.the_canvas).getWidth()/2 - ((GameBoard)findViewById(R.id.the_canvas)).getSprite3Width()/2;
+        sprite3MaxY = findViewById(R.id.the_canvas).getHeight() /2- ((GameBoard)findViewById(R.id.the_canvas)).getSprite3Height()/2;
 
         ((Button)findViewById(R.id.the_button)).setEnabled(true);
         frame.removeCallbacks(frameUpdate);
@@ -128,8 +128,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     ((GameBoard)findViewById(R.id.the_canvas)).getSprite1Y()) ;
             Point sprite2 = new Point (((GameBoard)findViewById(R.id.the_canvas)).getSprite2X(),
                     ((GameBoard)findViewById(R.id.the_canvas)).getSprite2Y());
-            Point sprite3 = new Point (((GameBoard)findViewById(R.id.the_canvas)).getSprite3X(),
-                    ((GameBoard)findViewById(R.id.the_canvas)).getSprite3Y());
+//            Point sprite3 = new Point (((GameBoard)findViewById(R.id.the_canvas)).getSprite3X(),
+//                    ((GameBoard)findViewById(R.id.the_canvas)).getSprite3Y());
 
 
             sprite1.x = sprite1.x + sprite1Velocity.x;
@@ -149,18 +149,18 @@ public class MainActivity extends Activity implements OnClickListener {
                 sprite2Velocity.y *= -1;
             }
 
-            sprite3.x = sprite3.x + sprite3Velocity.x;
+          /*  sprite3.x = sprite3.x + sprite3Velocity.x;
             if (sprite3.x > sprite3MaxX || sprite3.x < 5) {
                 sprite3Velocity.x *= -1;
             }
             sprite3.y = sprite3.y + sprite3Velocity.y;
             if (sprite3.y > sprite3MaxY || sprite3.y < 5) {
                 sprite3Velocity.y *= -1;
-            }
+            }*/
 
             ((GameBoard)findViewById(R.id.the_canvas)).setSprite1(sprite1.x, sprite1.y);
             ((GameBoard)findViewById(R.id.the_canvas)).setSprite2(sprite2.x, sprite2.y);
-            ((GameBoard)findViewById(R.id.the_canvas)).setSprite3(sprite3.x, sprite3.y);
+            //((GameBoard)findViewById(R.id.the_canvas)).setSprite3(sprite3.x, sprite3.y);
             ((GameBoard)findViewById(R.id.the_canvas)).invalidate();
             frame.postDelayed(frameUpdate, FRAME_RATE);
         }

@@ -124,7 +124,7 @@ public class GameBoard extends View{
         //load our bitmaps and set the bounds for the controller
         sprite1 = new Point(-1,-1);
         sprite2 = new Point(-1,-1);
-        sprite3 = new Point(-1,-1);
+        sprite3 = new Point(450,450);
         //Define a matrix so we can rotate the asteroid
         m = new Matrix();
         p = new Paint();
@@ -199,6 +199,7 @@ public class GameBoard extends View{
         if (sprite2.x>=0) {
             canvas.drawBitmap(bm2, sprite2.x, sprite2.y, null);
         }
+
         if (sprite3.x>=0) {
             canvas.drawBitmap(bm3, sprite3.x, sprite3.y, null);
         }
