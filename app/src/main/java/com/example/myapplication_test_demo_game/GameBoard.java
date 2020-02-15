@@ -148,11 +148,15 @@ public class GameBoard extends View{
     }
 
     private boolean checkForCollision() {
-        if (sprite1.x<0 && sprite2.x<0 && sprite1.y<0 && sprite2.y<0) return false;
+        if (sprite1.x<0 && sprite2.x<0 && sprite1.y<0 && sprite2.y<0 && sprite3.x<0 && sprite3.y<0) return false;
         Rect r1 = new Rect(sprite1.x, sprite1.y, sprite1.x + sprite1Bounds.width(),  sprite1.y + sprite1Bounds.height());
         Rect r2 = new Rect(sprite2.x, sprite2.y, sprite2.x + sprite2Bounds.width(), sprite2.y + sprite2Bounds.height());
+        Rect r4 = new Rect(sprite3.x, sprite3.y, sprite3.x + sprite3Bounds.width(), sprite3.y + sprite3Bounds.height());
+
         Rect r3 = new Rect(r1);
-        if(r1.intersect(r2)) {
+       Rect r5= new Rect (r4);
+
+        if(r1.intersect(r2) && r1.intersect(r4) && r4.intersect(r2) ) {
             for (int i = r1.left; i<r1.right; i++) {
                 for (int j = r1.top; j<r1.bottom; j++) {
                     if (bm1.getPixel(i-r3.left, j-r3.top)!= Color.TRANSPARENT) {
@@ -164,7 +168,8 @@ public class GameBoard extends View{
                 }
             }
         }
-        lastCollision = new Point(-1,-1);
+
+
         return false;
     }
 
@@ -209,7 +214,7 @@ public class GameBoard extends View{
             //if there is one lets draw a red X
             p.setColor(Color.RED);
             p.setAlpha(255);
-            p.setStrokeWidth(5);
+            p.setStrokeWidth(15);
             canvas.drawLine(lastCollision.x - 5, lastCollision.y - 5, lastCollision.x + 5, lastCollision.y + 5, p);
             canvas.drawLine(lastCollision.x + 5, lastCollision.y - 5, lastCollision.x - 5, lastCollision.y + 5, p);
         }
