@@ -193,11 +193,11 @@ public class GameBoard extends View{
             canvas.drawPoint(starField.get(i).x, starField.get(i).y, p);
         }
 
-        if (sprite1.x>=0) {
+        if (sprite3.x>=0) {
             m.reset();
-            m.postTranslate((float)(sprite1.x), (float)(sprite1.y));
-            m.postRotate(sprite1Rotation, (float)(sprite1.x+sprite1Bounds.width()/2.0), (float)(sprite1.y+sprite1Bounds.width()/2.0));
-            canvas.drawBitmap(bm1, m, null);
+            m.postTranslate((float)(sprite3.x), (float)(sprite3.y));
+            m.postRotate(45, (float)(sprite3.x+sprite3Bounds.width()/2.0), (float)(sprite3.y+sprite3Bounds.width()/2.0));
+            canvas.drawBitmap(bm3, m, null);
             sprite1Rotation+=5;
             if (sprite1Rotation >= 360) sprite1Rotation=0;
         }
@@ -205,8 +205,8 @@ public class GameBoard extends View{
             canvas.drawBitmap(bm2, sprite2.x, sprite2.y, null);
         }
 
-        if (sprite3.x>=0) {
-            canvas.drawBitmap(bm3, sprite3.x, sprite3.y, null);
+        if (sprite1.x>=0) {
+            canvas.drawBitmap(bm1, sprite1.x, sprite1.y, null);
         }
         //The last order of business is to check for a collision
         collisionDetected = checkForCollision();
@@ -214,9 +214,9 @@ public class GameBoard extends View{
             //if there is one lets draw a red X
             p.setColor(Color.RED);
             p.setAlpha(255);
-            p.setStrokeWidth(15);
-            canvas.drawLine(lastCollision.x - 5, lastCollision.y - 5, lastCollision.x + 5, lastCollision.y + 5, p);
-            canvas.drawLine(lastCollision.x + 5, lastCollision.y - 5, lastCollision.x - 5, lastCollision.y + 5, p);
+            p.setStrokeWidth(60);
+            canvas.drawLine(lastCollision.x - 5, lastCollision.y - 5, lastCollision.x + 10, lastCollision.y + 10, p);
+            canvas.drawLine(lastCollision.x + 5, lastCollision.y - 5, lastCollision.x - 10, lastCollision.y + 10, p);
         }
     }
 }

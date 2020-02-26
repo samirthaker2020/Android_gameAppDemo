@@ -36,17 +36,30 @@ android:layout_height="wrap_content"
 android:layout_gravity="center"
 android:text="Last Collision XY (?,?)"
 android:id="@+id/the_other_label" />
-<com.example.myapplication_test_demo_game.GameBoard
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:layout_margin="20dip"
-android:id="@+id/the_canvas"/>
 
+    <ScrollView
+        android:id="@+id/l1"
+        style="@android:style/Widget.DeviceDefault.Light.ScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alwaysDrawnWithCache="true"
+        android:background="#BE5A5A"
+        android:scrollbarStyle="insideInset"
+        android:visibility="visible"
+        tools:visibility="visible">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-
-
-
+            <com.example.myapplication_test_demo_game.GameBoard
+                android:id="@+id/the_canvas"
+                android:layout_width="match_parent"
+                android:layout_height="853dp"
+                android:layout_margin="20dip" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>
