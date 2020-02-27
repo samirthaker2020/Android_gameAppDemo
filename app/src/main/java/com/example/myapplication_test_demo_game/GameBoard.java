@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,8 +12,12 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.RequiresApi;
 
 public class GameBoard extends View{
 
@@ -173,12 +178,14 @@ public class GameBoard extends View{
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     synchronized public void onDraw(Canvas canvas) {
 
+
         p.setColor(Color.BLACK);
         p.setAlpha(255);
-        p.setStrokeWidth(1);
+        p.setStrokeWidth(160);
         canvas.drawRect(0, 0, getWidth(), getHeight(), p);
 
         if (starField==null) {
@@ -186,9 +193,12 @@ public class GameBoard extends View{
         }
 
         p.setColor(Color.CYAN);
+        Resources res = getResources();
+        Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.bc);
+        canvas.drawBitmap(bitmap, 0, 0, p);
         p.setAlpha(starAlpha+=starFade);
         if (starAlpha>=252 || starAlpha <=80) starFade=starFade*-1;
-        p.setStrokeWidth(5);
+        p.setStrokeWidth(15);
         for (int i=0; i<NUM_OF_STARS; i++) {
             canvas.drawPoint(starField.get(i).x, starField.get(i).y, p);
         }
